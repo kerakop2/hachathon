@@ -1,3 +1,110 @@
+//! CRUD
+
+const api = "http://localhost:8000/KPI";
+
+//! Create
+let inpName = $(".inp-name");
+let inpSurname = $(".inp-surname");
+let inpNumber = $(".inp-number");
+let addForm = $(".add-form");
+let inpWeekKpi = $(".inp-weekkpi");
+let inpMonthKpi = $(".inp-monthkpi");
+let searchValue = "";
+
+addForm.on("submit", async (event) => {
+  event.preventDefault();
+  let name = inpName.val().trim();
+  let surname = inpSurname.val().trim();
+  let number = inpNumber.val().trim();
+  let weekkpi = inpWeekKpi.val().trim();
+  let monthkpi = inpMonthKpi.val().trim();
+  let newStudent = {
+    name: name,
+    surname: surname,
+    number: number,
+    weekkpi: weekkpi,
+    monthkpi: monthkpi,
+  };
+  for (let key in newStudent) {
+    if (!newStudent[key]) {
+      alert("Заполните все поля");
+      return;
+    }
+  }
+  const responce = await fetch(api, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newStudent),
+  });
+  inpName.val("");
+  inpSurname.val("");
+  inpNumber.val("");
+  inpWeekKpi.val("");
+  inpMonthKpi.val("");
+  Toastify({
+    text: "Successfully added",
+    duration: 3000,
+    close: true,
+    gravity: "top",
+    position: "left",
+    stopOnFocus: true,
+    style: {
+      background:
+        "linear-gradient(90deg, rgba(37,224,112,1) 18%, rgba(3,56,244,1) 100%)",
+    },
+  }).showToast();
+  getProducts();
+});
+
+// //! Read
+
+let tbody = $("tbody");
+
+async function getProducts() {
+  const responce = await fetch(`http://localhost:8000/KPI?q=${searchValue}`);
+  const data = await responce.json();
+
+  let first = currentPage * postsPerPage - postsPerPage;
+  let last = currentPage * postsPerPage;
+  const currentProducts = data.slice(first, last);
+  lastPage = Math.ceil(data.length / postsPerPage);
+
+  if (currentPage === 1) {
+    prevBtn.addClass("disabled");
+  } else {
+    prevBtn.removeClass("disabled");
+  }
+
+  if (currentPage === lastPage) {
+    nextBtn.addClass("disabled");
+  } else {
+    nextBtn.removeClass("disabled");
+  }
+
+  tbody.html("");
+  currentProducts.forEach((item) => {
+    tbody.append(`
+    <tr>
+        <td>${item.name}</td>
+        <td>${item.surname}</td>
+        <td>${item.number}</td>
+        <td>${item.weekkpi} </td>
+        <td>${item.monthkpi} </td>
+        <td>
+          <button id="${item.id}" class="btn-delete btn btn-danger">
+            Удалить
+          </button>
+          <button id="${item.id}" class="btn-edit btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Редактировать
+          </button></td>
+           </tr>
+      `);
+  });
+}
+getProducts();
+
 //! Delete
 
 $(document).on("click", ".btn-delete", async (event) => {
@@ -104,4 +211,13 @@ prevBtn.on("click", () => {
   currentPage--;
   getProducts();
   window.scrollTo(0, 0);
+});
+
+//! Live search
+let searchInp = $(".inp-search");
+
+searchInp.on("input", (event) => {
+  searchValue = event.target.value;
+  currentPage = 1;
+  getProducts();
 });

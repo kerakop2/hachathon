@@ -88,7 +88,62 @@
         </ul>
       </nav>
     </div>
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              Редактировать данные
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form class="edit-form">
+              <input
+                type="text"
+                class="form-controle edit-name"
+                placeholder="Введите имя"
+                width="500px"
+              />
 
+              <input
+                type="text"
+                class="form-controle edit-surname"
+                placeholder="Введите фамилию"
+              />
+
+              <input
+                type="text"
+                class="form-controle edit-number"
+                placeholder="Номер телефона"
+              />
+              <input
+                type="text"
+                class="form-controle edit-weekkpi"
+                placeholder="Недельный KPI"
+              />
+              <input
+                type="text"
+                class="form-controle edit-monthkpi"
+                placeholder="Месячный KPI"
+              />
+              <button type="submit" class="btn btn-primary">Сохранить</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
     <script
       type="text/javascript"
       src="https://cdn.jsdelivr.net/npm/toastify-js"
